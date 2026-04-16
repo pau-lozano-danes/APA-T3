@@ -5,7 +5,7 @@
 > [!Important]
 > Introduzca a continuación su nombre y apellidos:
 >
-> Fulano Mengano Zutano
+> Pau Lozano Danes
 
 ## Aviso Importante
 
@@ -98,9 +98,78 @@ resultado de la ejecución de los tests unitarios.
 
 #### Código desarrollado
 
-Inserte a continuación el código de los métodos desarrollados en esta tarea, usando los
-comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
-vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
+# ==========================================
+    # MÉTODOS AÑADIDOS PARA LA TAREA 3
+    # ==========================================
+
+    def __mul__(self, other):
+        """
+        Multiplicación de Hadamard (elemento a elemento) o por un escalar.
+        
+        Ejemplos:
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 * 2
+        Vector([2, 4, 6])
+        >>> v1 * v2
+        Vector([4, 10, 18])
+        """
+        if isinstance(other, (int, float)):
+            return Vector([a * other for a in self.elements])
+        elif isinstance(other, Vector):
+            return Vector([a * b for a, b in zip(self.elements, other.elements)])
+        return NotImplemented
+
+    def __rmul__(self, other):
+        """Permite la multiplicación conmutativa."""
+        return self.__mul__(other)
+
+    def __matmul__(self, other):
+        """
+        Producto escalar de dos vectores usando el operador @.
+        
+        Ejemplos:
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 @ v2
+        32
+        """
+        if isinstance(other, Vector):
+            return sum(a * b for a, b in zip(self.elements, other.elements))
+        return NotImplemented
+
+    def __rmatmul__(self, other):
+        """Permite la conmutatividad del producto escalar."""
+        return self.__matmul__(other)
+
+    def __floordiv__(self, other):
+        """
+        Calcula la componente tangencial (paralela) de este vector respecto a otro.
+        
+        Ejemplos:
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 // v2
+        Vector([1.0, 2.0, 1.0])
+        """
+        if isinstance(other, Vector):
+            escalar = (self @ other) / (other @ other)
+            return other * escalar
+        return NotImplemented
+
+    def __mod__(self, other):
+        """
+        Calcula la componente normal (perpendicular) de este vector respecto a otro.
+        
+        Ejemplos:
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 % v2
+        Vector([1.0, -1.0, 1.0])
+        """
+        if isinstance(other, Vector):
+            return self - (self // other)
+        return NotImplemented
 
 #### Subida del resultado al repositorio GitHub y *pull-request*
 
